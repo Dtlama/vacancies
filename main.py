@@ -1,7 +1,9 @@
+from dotenv import load_dotenv
 from itertools import count
 from time import sleep
 from terminaltables import AsciiTable
 import requests
+import os
 
 
 def create_table(language_params, title):
@@ -14,11 +16,11 @@ def create_table(language_params, title):
     print(table.table)
 
 
-def get_superjob_vacancies(language):
+def get_superjob_vacancies(language, sj_apikey):
     url = 'https://api.superjob.ru/2.0/vacancies/'
     salaries = []
     headers = {
-        'X-Api-App-Id': 'v3.r.137493167.b05769075f242ec71b29249267fb0a1bc85c3022.6f80984fd5ee94c155d3ece5da6091466411f267'
+        'X-Api-App-Id': sj_apikey
     }
     for page in count(0):
         payload = {'town': 'Москва', 'keyword': language, 'page': page}
@@ -92,11 +94,13 @@ def predict_rub_salary(salary_from, salary_to, salary_currency):
 
 
 if __name__ == "__main__":
+    load_dotenv()
+    sj_apikey = os.environ['SUPERJOB_APIKEY']
     language_params_headhunter = {}
     language_params_superjob = {}
     languages = ['Python', 'Java', 'JavaScript', 'c', 'c#', 'c++', 'ruby', 'js', 'go']
     for language in languages:
-        language_params_superjob[language] = get_superjob_vacancies(language)
+        language_params_superjob[language] = get_superjob_vacancies(language, sj_apikey)
         language_params_headhunter[language] = get_vacancies(language)
     create_table(language_params_superjob, 'SuperJob Moscow')
     create_table(language_params_headhunter, 'HeadHunter Moscow')
