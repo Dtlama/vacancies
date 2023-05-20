@@ -26,7 +26,8 @@ def get_superjob_vacancies_statistics(language, sj_apikey):
         payload = {'town': 'Москва', 'keyword': language, 'page': page}
         response = requests.get(url, headers=headers, params=payload)
         response.raise_for_status()
-        for vacancy in response.json()['objects']:
+        response_content = response.json()
+        for vacancy in response_content['objects']:
             salary_from = vacancy['payment_from']
             salary_to = vacancy['payment_to']
             salary_currency = vacancy['currency']
@@ -34,7 +35,7 @@ def get_superjob_vacancies_statistics(language, sj_apikey):
             if predicted_salary:
                 salaries.append(predicted_salary)
             print(vacancy['profession'], vacancy['town'], predicted_salary)
-        if not response.json()['more']:
+        if not response_content['more']:
             break
     vacancies_processed = len(salaries)
     if vacancies_processed:
@@ -42,7 +43,7 @@ def get_superjob_vacancies_statistics(language, sj_apikey):
     else:
         average_salary = 0
     return {
-        "vacancies_found": response.json()['total'],
+        "vacancies_found": response_content['total'],
         "vacancies_processed": vacancies_processed,
         "average_salary": average_salary
     }
@@ -54,11 +55,11 @@ def get_vacancies_statistics(language):
     for page in count(0):
         payload = {'text': language, 'area': '1', 'page': page}
         response = requests.get(url, params=payload)
-        print(response.json())
+        print(response_content)
         response.raise_for_status()
         print(page)
         sleep(0.2)
-        for vacancy in response.json()['items']:
+        for vacancy in response_content['items']:
             if not vacancy['salary']:
                 continue
             salary_from = vacancy['salary']['from']
@@ -67,7 +68,7 @@ def get_vacancies_statistics(language):
             predicted_salary = predict_rub_salary(salary_from, salary_to, salary_currency)
             if predicted_salary:
                 salaries.append(predicted_salary)
-        if page >= response.json()['pages']-1:
+        if page >= response_content['pages']-1:
             break
     vacancies_processed = len(salaries)
 
@@ -76,7 +77,7 @@ def get_vacancies_statistics(language):
     else:
         average_salary = 0
     return {
-        "vacancies_found": response.json()['found'],
+        "vacancies_found": response_contain['found'],
         "vacancies_processed": vacancies_processed,
         "average_salary": average_salary
     }
