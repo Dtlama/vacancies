@@ -16,7 +16,7 @@ def create_table(language_params, title):
     print(table.table)
 
 
-def get_superjob_vacancies(language, sj_apikey):
+def get_superjob_vacancies_statistics(language, sj_apikey):
     url = 'https://api.superjob.ru/2.0/vacancies/'
     salaries = []
     headers = {
@@ -48,7 +48,7 @@ def get_superjob_vacancies(language, sj_apikey):
     }
 
 
-def get_vacancies(language):
+def get_vacancies_statistics(language):
     url = "https://api.hh.ru/vacancies"
     salaries = []
     for page in count(0):
