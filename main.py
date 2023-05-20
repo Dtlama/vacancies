@@ -7,12 +7,12 @@ import os
 
 
 def create_table(language_params, title):
-    table_data = [
-        ['Язык программирования', 'Вакансий найдено', 'Вакасий обработано', 'Средняя зарплата']
+    table_payload = [
+        ['Язык программирования', 'Вакансий найдено', 'Вакансий обработано', 'Средняя зарплата']
     ]
     for language, params in language_params.items():
         table_data.append([language, params['vacancies_found'], params['vacancies_processed'], params['average_salary']])
-    table = AsciiTable(table_data, title)
+    table = AsciiTable(table_payload, title)
 
 
 def get_superjob_vacancies_statistics(language, sj_apikey):
@@ -55,6 +55,7 @@ def get_vacancies_statistics(language):
         payload = {'text': language, 'area': '1', 'page': page}
         response = requests.get(url, params=payload)
         response.raise_for_status()
+        response_content = response.json()
         sleep(0.2)
         for vacancy in response_content['items']:
             if not vacancy['salary']:
@@ -98,7 +99,7 @@ if __name__ == "__main__":
     language_params_superjob = {}
     languages = ['Python', 'Java', 'JavaScript', 'c', 'c#', 'c++', 'ruby', 'js', 'go']
     for language in languages:
-        language_params_superjob[language] = get_superjob_vacancies(language, sj_apikey)
-        language_params_headhunter[language] = get_vacancies(language)
+        language_params_superjob[language] = get_superjob_vacancies_statistics(language, sj_apikey)
+        language_params_headhunter[language] = get_vacancies_statistics(language)
     create_table(language_params_superjob, 'SuperJob Moscow')
     create_table(language_params_headhunter, 'HeadHunter Moscow')
