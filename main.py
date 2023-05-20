@@ -11,7 +11,7 @@ def create_table(language_params, title):
         ['Язык программирования', 'Вакансий найдено', 'Вакансий обработано', 'Средняя зарплата']
     ]
     for language, params in language_params.items():
-        table_data.append([language, params['vacancies_found'], params['vacancies_processed'], params['average_salary']])
+        table_payload.append([language, params['vacancies_found'], params['vacancies_processed'], params['average_salary']])
     table = AsciiTable(table_payload, title)
 
 
@@ -75,7 +75,7 @@ def get_vacancies_statistics(language):
     else:
         average_salary = 0
     return {
-        "vacancies_found": response_contain['found'],
+        "vacancies_found": response_content['found'],
         "vacancies_processed": vacancies_processed,
         "average_salary": average_salary
     }
