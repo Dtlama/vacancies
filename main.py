@@ -55,9 +55,7 @@ def get_vacancies_statistics(language):
     for page in count(0):
         payload = {'text': language, 'area': '1', 'page': page}
         response = requests.get(url, params=payload)
-        print(response_content)
         response.raise_for_status()
-        print(page)
         sleep(0.2)
         for vacancy in response_content['items']:
             if not vacancy['salary']:
