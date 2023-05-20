@@ -13,7 +13,6 @@ def create_table(language_params, title):
     for language, params in language_params.items():
         table_data.append([language, params['vacancies_found'], params['vacancies_processed'], params['average_salary']])
     table = AsciiTable(table_data, title)
-    print(table.table)
 
 
 def get_superjob_vacancies_statistics(language, sj_apikey):
